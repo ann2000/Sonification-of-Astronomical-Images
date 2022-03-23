@@ -17,6 +17,28 @@ from PIL import Image
 import tkinter as tk
 from tkinter import filedialog
 
+freq = []
+amplitudes = []
+
+def freq_mapping(N):
+
+  fl = 500
+  fh = 5000
+  
+  for i in range(0,N):
+    a =fl+(fh-fl)*(i-1)/(N-1)
+    freq.append(a)
+  
+def amp_mapping():
+
+  al = 1000
+  ah = 5000
+  N = 255
+
+  for i in range(0,N):
+    b = al+(ah-al)*(i-1)/(N-1)
+    amplitudes.append(b)
+
 root = tk.Tk()
 root.withdraw()
 
@@ -70,13 +92,22 @@ tbl['kron_flux'].info.format = '.2f'
 #print(tbl['xcentroid'][0],"\n",tbl['ycentroid'])
 
 px = im.load()
-print("Sources     x-coordinate     y-coordinate      intensity\n")
+
+# coordinate = x, y = 401, 0
+# print(im.getpixel(401, 0))
+
+sources_count = len(tbl)
+
+width, height = im.size
+freq_mapping(height)
+amp_mapping()
+print(freq, amplitudes)
+
+print("Sources     x-coordinate     y-coordinate      intensity                     frequency         amplitude\n")
 for source in tbl:
 
     x, y = int(source[1]), int(source[2])
 #    px_intensity = (image[y,x][0] + image[y,x][1] + image[y,x][2])//3
     px_intensity = (px[x,y][0] + px[x,y][1] + px[x,y][2])//3        
-    print(source[0], "\t\t", x, "\t\t", y, "\t\t", image[y,x], px_intensity)
+    print(source[0], "\t\t", x, "\t\t", y, "\t\t", image[y,x], px_intensity, "\t\t", freq[y], "\t\t", amplitudes[px_intensity])
     
-# coordinate = x, y = 401, 0
-# print(im.getpixel(401, 0))
