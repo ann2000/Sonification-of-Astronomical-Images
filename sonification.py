@@ -22,12 +22,13 @@ amplitudes = []
 
 def freq_mapping(N):
 
-  fl = 500
-  fh = 5000
+  fl = 2**((0+1-49)/12)*440
+  fh = 2**((N+1-49)/12)*440
   
   for i in range(0,N):
-    a =fl+(fh-fl)*(i-1)/(N-1)
+    a = 2**((i+1-49)/12)*440
     freq.append(a)
+
   
 def amp_mapping():
 
