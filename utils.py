@@ -41,7 +41,7 @@ def get_sine_wave(frequency, duration, sample_rate=44100, amplitude=4096):
     wave = amplitude*np.sin(2*np.pi*frequency*t)
     return wave
 
-def apply_overtones(frequency, duration, factor, sample_rate=44100, amplitude=4096):
+def apply_overtones(frequency, duration, factor, amplitude, sample_rate=44100):
     '''
     Return fundamental note with overtones applied. 
 
@@ -169,8 +169,7 @@ def apply_pedal(note_values, bar_value):
             break
     return new_values
 
-def get_song_data(music_notes, note_values, bar_value, factor, length,
-                  decay, sustain_level, sample_rate=44100, amplitude=4096):
+def get_song_data(freqs, note_values, factor, amplitudes, sample_rate=44100):
     '''
     Generate song from notes. 
 
@@ -200,20 +199,19 @@ def get_song_data(music_notes, note_values, bar_value, factor, length,
     song : ndarray
 
     '''
-    note_freqs = get_piano_notes()
-    frequencies = [note_freqs[note] for note in music_notes]
-    new_values = apply_pedal(note_values, bar_value)
+    frequencies = freqs
+#    new_values = apply_pedal(note_values, bar_value)
     duration = int(sum(note_values)*sample_rate)
     end_idx = np.cumsum(np.array(note_values)*sample_rate).astype(int)
     start_idx = np.concatenate(([0], end_idx[:-1]))
-    end_idx = np.array([start_idx[i]+new_values[i]*sample_rate for i in range(len(new_values))]).astype(int)
+    end_idx = np.array([start_idx[i]+note_values[i]*sample_rate for i in range(len(note_values))]).astype(int)
     
     song = np.zeros((duration,))
-    for i in range(len(music_notes)):
-        this_note = apply_overtones(frequencies[i], new_values[i], factor)
-        weights = get_adsr_weights(frequencies[i], new_values[i], length, 
-                                   decay, sustain_level)
-        song[start_idx[i]:end_idx[i]] += this_note*weights
+    for i in range(len(frequencies)):
+        this_note = apply_overtones(frequencies[i], note_values[i], factor, amplitudes[i])
+#        weights = get_adsr_weights(frequencies[i], note_values[i], length, decay, sustain_level)
+        song[start_idx[i]:end_idx[i]] += this_note
 
-    song = song*(amplitude/np.max(song))
+#        song = song*(amplitudes[i]/np.max(song))
+
     return song

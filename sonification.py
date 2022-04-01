@@ -98,6 +98,8 @@ px = im.load()
 # print(im.getpixel(401, 0))
 
 sources_count = len(tbl)
+source_freqs = []
+source_amplitudes = []
 
 width, height = im.size
 freq_mapping(height)
@@ -111,4 +113,6 @@ for source in tbl:
 #    px_intensity = (image[y,x][0] + image[y,x][1] + image[y,x][2])//3
     px_intensity = (px[x,y][0] + px[x,y][1] + px[x,y][2])//3        
     print(source[0], "\t\t", x, "\t\t", y, "\t\t", image[y,x], px_intensity, "\t\t", freq[y], "\t\t", amplitudes[px_intensity])
-    
+    source_freqs.append(freq[y])
+    source_amplitudes.append(amplitudes[px_intensity])
+print(source_amplitudes)
