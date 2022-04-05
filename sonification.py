@@ -16,19 +16,25 @@ from PIL import Image
 
 import tkinter as tk
 from tkinter import filedialog
+import operator
 
 freq = []
 amplitudes = []
 
 def freq_mapping(N):
 
-  fl = 2**((0+1-49)/12)*440
-  fh = 2**((N+1-49)/12)*440
-  
-  for i in range(0,N):
-    a = 2**((i+1-49)/12)*440
-    freq.append(a)
+#  fl = 2**((0+1-49)/12)*440
+#  fh = 2**((N+1-49)/12)*440
+#  
+#  for i in range(0,N):
+#    a = 2**((i+1-49)/12)*440
+#    freq.append(a)
+  fl = 20
+  fh = 20000
 
+  for i in range(1, N+1):
+    a = fl+(fh-fl)*(i-1)/(N-1)
+    freq.append(a)
   
 def amp_mapping():
 
@@ -86,13 +92,16 @@ plt.show()
 
 cat = SourceCatalog(data, segm_deblend)
 tbl = cat.to_table()
+
 tbl['xcentroid'].info.format = '.2f' 
 tbl['ycentroid'].info.format = '.2f'
 tbl['kron_flux'].info.format = '.2f'
 
+tbl = sorted(tbl, key=operator.itemgetter(1))
 #print(tbl['xcentroid'][0],"\n",tbl['ycentroid'])
 
 px = im.load()
+width, height = im.size
 
 # coordinate = x, y = 401, 0
 # print(im.getpixel(401, 0))
@@ -101,12 +110,13 @@ sources_count = len(tbl)
 source_freqs = []
 source_amplitudes = []
 
-width, height = im.size
 freq_mapping(height)
 amp_mapping()
 print(freq, amplitudes)
 
 print("Sources     x-coordinate     y-coordinate      intensity                     frequency         amplitude\n")
+
+
 for source in tbl:
 
     x, y = int(source[1]), int(source[2])
@@ -115,4 +125,5 @@ for source in tbl:
     print(source[0], "\t\t", x, "\t\t", y, "\t\t", image[y,x], px_intensity, "\t\t", freq[y], "\t\t", amplitudes[px_intensity])
     source_freqs.append(freq[y])
     source_amplitudes.append(amplitudes[px_intensity])
+
 print(source_amplitudes)

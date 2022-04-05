@@ -1,6 +1,6 @@
 import numpy as np
 
-def get_sine_wave(frequency, duration, sample_rate=44100, amplitude=4096):
+def get_sine_wave(frequency, duration, amplitude, sample_rate=44100):
   
     t = np.linspace(0, duration, int(sample_rate*duration))
     wave = amplitude*np.sin(2*np.pi*frequency*t)
@@ -12,9 +12,9 @@ def apply_overtones(frequency, duration, factor, amplitude, sample_rate=44100):
     frequencies = np.minimum(np.array([frequency*(x+1) for x in range(len(factor))]), sample_rate//2)
     amplitudes = np.array([amplitude*x for x in factor])
     
-    fundamental = get_sine_wave(frequencies[0], duration, sample_rate, amplitudes[0])
+    fundamental = get_sine_wave(frequencies[0], duration, amplitudes[0], sample_rate)
     for i in range(1, len(factor)):
-        overtone = get_sine_wave(frequencies[i], duration, sample_rate, amplitudes[i])
+        overtone = get_sine_wave(frequencies[i], duration, amplitudes[i], sample_rate)
         fundamental += overtone
     return fundamental
 
@@ -35,5 +35,5 @@ def get_song_data(freqs, note_values, factor, amplitudes, sample_rate=44100):
         song[start_idx[i]:end_idx[i]] += this_note
 
 #        song = song*(amplitudes[i]/np.max(song))
-
+ 
     return song
