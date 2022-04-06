@@ -138,7 +138,7 @@ for pos in range(width):
 
 print(song_freqs, song_amplitudes)
 
-for i in range(width):
-  img = image
-  if i in source_freqs.keys():
-    img[i][]
+#for i in range(width):
+#  img = image
+#  if i in source_freqs.keys():
+#    img[i][]
