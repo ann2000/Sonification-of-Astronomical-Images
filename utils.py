@@ -29,11 +29,13 @@ def get_song_data(freqs, note_values, factor, amplitudes, sample_rate=44100):
     end_idx = np.array([start_idx[i]+note_values[i]*sample_rate for i in range(len(note_values))]).astype(int)
     
     song = np.zeros((duration,))
-    for i in range(len(frequencies)):
-        this_note = apply_overtones(frequencies[i], note_values[i], factor, amplitudes[i])
+    
+    for freq in range(len(frequencies)):
+        this_note =  apply_overtones(frequencies[freq][0], note_values[freq], factor, amplitudes[freq][0])
+        for i in range(len(frequencies[freq])):
+            this_note += apply_overtones(frequencies[freq][i], note_values[freq], factor, amplitudes[freq][i])
 #        weights = get_adsr_weights(frequencies[i], note_values[i], length, decay, sustain_level)
-        song[start_idx[i]:end_idx[i]] += this_note
-
+        song[start_idx[freq]:end_idx[freq]] += this_note
 #        song = song*(amplitudes[i]/np.max(song))
- 
+
     return song

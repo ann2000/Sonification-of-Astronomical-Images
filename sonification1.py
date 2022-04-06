@@ -75,20 +75,20 @@ npixels = 5
 segm = detect_sources(data, threshold, npixels=npixels, kernel=kernel)
 segm_deblend = deblend_sources(data, segm, npixels=npixels,kernel=kernel, nlevels=32,contrast=0.001)
 
-norm = ImageNormalize(stretch=SqrtStretch())
-fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 12.5))
-ax1.imshow(data, origin='lower', cmap='Greys_r', norm=norm)
-ax1.set_title('Data')
-cmap = segm.make_cmap(seed=123)
-ax2.imshow(segm, origin='lower', cmap=cmap, interpolation='nearest')
-ax2.set_title('Segmentation Image')
-
-fig, ax = plt.subplots(1, 1, figsize=(10, 6.5))
-cmap = segm_deblend.make_cmap(seed=123)
-ax.imshow(segm_deblend, origin='lower', cmap=cmap, interpolation='nearest')
-ax.set_title('Deblended Segmentation Image')
-plt.tight_layout()
-plt.show()
+#norm = ImageNormalize(stretch=SqrtStretch())
+#fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 12.5))
+#ax1.imshow(data, origin='lower', cmap='Greys_r', norm=norm)
+#ax1.set_title('Data')
+#cmap = segm.make_cmap(seed=123)
+##ax2.imshow(segm, origin='lower', cmap=cmap, interpolation='nearest')
+#ax2.set_title('Segmentation Image')
+#
+#fig, ax = plt.subplots(1, 1, figsize=(10, 6.5))
+#cmap = segm_deblend.make_cmap(seed=123)
+##ax.imshow(segm_deblend, origin='lower', cmap=cmap, interpolation='nearest')
+#ax.set_title('Deblended Segmentation Image')
+#plt.tight_layout()
+#plt.show()
 
 cat = SourceCatalog(data, segm_deblend)
 tbl = cat.to_table()
@@ -107,19 +107,13 @@ width, height = im.size
 # print(im.getpixel(401, 0))
 
 sources_count = len(tbl)
-source_freqs = np.ndarray(shape = (width,1))
-source_amplitudes = []
+source_freqs = dict()
+source_amplitudes = dict()
 
 freq_mapping(height)
 amp_mapping()
-print(freq, amplitudes)
 
 print("Sources     x-coordinate     y-coordinate      intensity                     frequency         amplitude\n")
-
-for i in range(width):
-    if i in tbl['xcentroid']:
-        xfreq = []
-        xfreq.append(tbl['ycentroid'])
 
 for source in tbl:
 
@@ -127,7 +121,24 @@ for source in tbl:
 #    px_intensity = (image[y,x][0] + image[y,x][1] + image[y,x][2])//3
     px_intensity = (px[x,y][0] + px[x,y][1] + px[x,y][2])//3        
     print(source[0], "\t\t", x, "\t\t", y, "\t\t", image[y,x], px_intensity, "\t\t", freq[y], "\t\t", amplitudes[px_intensity])
-    source_freqs[x].append(freq[y])
-    source_amplitudes.append(amplitudes[px_intensity])
+    source_freqs.setdefault(x,[]).append(freq[y])
+    source_amplitudes.setdefault(x,[]).append(amplitudes[px_intensity])
 
-print(source_amplitudes)
+song_freqs = []
+song_amplitudes = []
+
+for pos in range(width):
+
+  if pos in source_freqs.keys():
+      song_freqs.append(source_freqs[pos])
+      song_amplitudes.append(source_amplitudes[pos])
+  else:
+      song_freqs.append([0])
+      song_amplitudes.append([0])
+
+print(song_freqs, song_amplitudes)
+
+for i in range(width):
+  img = image
+  if i in source_freqs.keys():
+    img[i][]
