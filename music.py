@@ -18,9 +18,11 @@ data = right_hand
 print(data)
 #data = data * (4096/np.max(data))
 
+sonification1.out_video.release()
+
 wavfile.write('data/sonified_audio.wav', 44100, data.astype(np.int16))
 sound, fs = sf.read('data/sonified_audio.wav', dtype='float32')  
-sd.play(sound, fs)
+#sd.play(sound, fs)
 status = sd.wait()
 
 

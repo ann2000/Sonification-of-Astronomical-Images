@@ -7,7 +7,7 @@ from astropy.visualization.mpl_normalize import ImageNormalize
 
 from astropy.convolution import Gaussian2DKernel
 from photutils.background import Background2D, MedianBackground
-from photutils.segmentation import detect_threshold, detect_sources, deblend_sources
+from photutils.segmentation import detect_sources, deblend_sources
 from photutils.background import Background2D, MedianBackground
 from astropy.stats import gaussian_fwhm_to_sigma
 from photutils.segmentation import SourceCatalog
@@ -68,7 +68,7 @@ data = data - bkg.background  # subtract the background
 threshold = 2. * bkg.background_rms  # above the background
 
 
-sigma = 3.0 * gaussian_fwhm_to_sigma  # FWHM = 3.
+sigma = 3.0 * gaussian_fwhm_to_sigma
 kernel = Gaussian2DKernel(sigma, x_size=3, y_size=3)
 kernel.normalize()
 npixels = 5
@@ -126,4 +126,4 @@ for source in tbl:
     source_freqs.append(freq[y])
     source_amplitudes.append(amplitudes[px_intensity])
 
-print(source_amplitudes)
+# print(source_amplitudes)
