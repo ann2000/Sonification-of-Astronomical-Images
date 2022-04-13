@@ -127,6 +127,7 @@ for source in tbl.index:
     source_freqs.setdefault(x,[]).append(freq[y])
     source_amplitudes.setdefault(x,[]).append(amplitudes[px_intensity])
 
+print(source_freqs)
 song_freqs = []
 song_amplitudes = []
 
@@ -139,24 +140,19 @@ for pos in range(width):
       song_freqs.append([0])
       song_amplitudes.append([0])
 
-print(song_freqs, song_amplitudes)
+#img_array = []
+out_video = cv2.VideoWriter('video.avi',cv2.VideoWriter_fourcc(*'DIVX'), 15, size)
 
-img_array = []
+for i in range(width):
 
-for i in range(250):
-
-  img = image.copy()
+  img = image
 
   if i in source_freqs.keys():
     tbl_copy = tbl.loc[tbl[1]==i]
     print(tbl_copy)
     for y in tbl_copy[2]:
-      img[i, y] = (255,255,255)
+      img[y, i] = (255,255,255)
   
-img_array.append(img)
+  out_video.write(img)
 
-out_video = cv2.VideoWriter('video.avi',cv2.VideoWriter_fourcc(*'DIVX'), 15, size)
-
-for i in range(len(img_array)):
-    out_video.write(img_array[i])
 out_video.release()
