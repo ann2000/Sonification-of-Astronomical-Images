@@ -18,6 +18,8 @@ import tkinter as tk
 from tkinter import filedialog
 import operator
 
+import pandas as pd
+
 freq = []
 amplitudes = []
 
@@ -97,12 +99,13 @@ tbl['xcentroid'].info.format = '.2f'
 tbl['ycentroid'].info.format = '.2f'
 tbl['kron_flux'].info.format = '.2f'
 
-tbl = sorted(tbl, key=operator.itemgetter(1))
+tbl = pd.DataFrame(sorted(tbl, key=operator.itemgetter(1)))
 #print(tbl['xcentroid'][0],"\n",tbl['ycentroid'])
+tbl = tbl.astype({1: int, 2:int})
 
 px = im.load()
 width, height = im.size
-
+size = (width, height)
 # coordinate = x, y = 401, 0
 # print(im.getpixel(401, 0))
 
@@ -115,15 +118,16 @@ amp_mapping()
 
 print("Sources     x-coordinate     y-coordinate      intensity                     frequency         amplitude\n")
 
-for source in tbl:
+for source in tbl.index:
 
-    x, y = int(source[1]), int(source[2])
+    x, y = int(tbl[1][source]), int(tbl[2][source])
 #    px_intensity = (image[y,x][0] + image[y,x][1] + image[y,x][2])//3
     px_intensity = (px[x,y][0] + px[x,y][1] + px[x,y][2])//3        
-    print(source[0], "\t\t", x, "\t\t", y, "\t\t", image[y,x], px_intensity, "\t\t", freq[y], "\t\t", amplitudes[px_intensity])
+    print(tbl[0][source], "\t\t", x, "\t\t", y, "\t\t", image[y,x], px_intensity, "\t\t", freq[y], "\t\t", amplitudes[px_intensity])
     source_freqs.setdefault(x,[]).append(freq[y])
     source_amplitudes.setdefault(x,[]).append(amplitudes[px_intensity])
 
+print(source_freqs)
 song_freqs = []
 song_amplitudes = []
 
@@ -136,9 +140,19 @@ for pos in range(width):
       song_freqs.append([0])
       song_amplitudes.append([0])
 
-print(song_freqs, song_amplitudes)
+#img_array = []
+out_video = cv2.VideoWriter('video.avi',cv2.VideoWriter_fourcc(*'DIVX'), 15, size)
 
-#for i in range(width):
-#  img = image
-#  if i in source_freqs.keys():
-#    img[i][]
+for i in range(width):
+
+  img = image
+
+  if i in source_freqs.keys():
+    tbl_copy = tbl.loc[tbl[1]==i]
+    print(tbl_copy)
+    for y in tbl_copy[2]:
+      img[y, i] = (255,255,255)
+  
+  out_video.write(img)
+
+out_video.release()
