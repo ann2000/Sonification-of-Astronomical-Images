@@ -19,6 +19,7 @@ from tkinter import filedialog
 import operator
 
 import pandas as pd
+from moviepy.editor import *
 
 freq = []
 amplitudes = []
@@ -131,6 +132,8 @@ print(source_freqs)
 song_freqs = []
 song_amplitudes = []
 
+
+#creating list of frequency and amplitudes at each x-coordinate
 for pos in range(width):
 
   if pos in source_freqs.keys():
@@ -141,7 +144,10 @@ for pos in range(width):
       song_amplitudes.append([0])
 
 #img_array = []
-out_video = cv2.VideoWriter('video.avi',cv2.VideoWriter_fourcc(*'DIVX'), 15, size)
+
+
+#create video
+out_video = cv2.VideoWriter('video.avi',cv2.VideoWriter_fourcc(*'DIVX'), 4, size)
 
 for i in range(width):
 
@@ -156,3 +162,5 @@ for i in range(width):
   out_video.write(img)
 
 out_video.release()
+clip = VideoFileClip("video.avi")
+ 

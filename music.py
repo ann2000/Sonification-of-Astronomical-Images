@@ -3,6 +3,7 @@ from scipy.io import wavfile
 import utils, sonification1
 import sounddevice as sd
 import soundfile as sf
+from moviepy.editor import *
 
 note_duration = [0.25]*len(sonification1.song_freqs)
 
@@ -18,11 +19,15 @@ data = right_hand
 print(data)
 #data = data * (4096/np.max(data))
 
-sonification1.out_video.release()
-
 wavfile.write('data/sonified_audio.wav', 44100, data.astype(np.int16))
 sound, fs = sf.read('data/sonified_audio.wav', dtype='float32')  
 #sd.play(sound, fs)
 status = sd.wait()
-
-
+clip = sonification1.clip
+  
+# loading audio file
+audioclip = AudioFileClip("data/sonified_audio.wav")
+  
+# adding audio to the video clip
+videoclip = clip.set_audio(audioclip)
+videoclip.write_videofile("video.avi",codec="libx264")
