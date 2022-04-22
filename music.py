@@ -24,10 +24,10 @@ sound, fs = sf.read('data/sonified_audio.wav', dtype='float32')
 #sd.play(sound, fs)
 status = sd.wait()
 clip = sonification1.clip
-  
+
 # loading audio file
 audioclip = AudioFileClip("data/sonified_audio.wav")
   
 # adding audio to the video clip
 videoclip = clip.set_audio(audioclip)
-videoclip.write_videofile("video.avi",codec="libx264")
+videoclip.write_videofile("video2.avi", codec="libx264")

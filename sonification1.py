@@ -21,6 +21,8 @@ import operator
 import pandas as pd
 from moviepy.editor import *
 
+import utils
+
 freq = []
 amplitudes = []
 
@@ -69,7 +71,6 @@ bkg_estimator = MedianBackground()
 bkg = Background2D(data, (50, 50), filter_size=(3, 3), bkg_estimator=bkg_estimator)
 data = data - bkg.background  # subtract the background
 threshold = 2. * bkg.background_rms  # above the background
-
 
 sigma = 3.0 * gaussian_fwhm_to_sigma  # FWHM = 3.
 kernel = Gaussian2DKernel(sigma, x_size=3, y_size=3)
@@ -132,7 +133,6 @@ print(source_freqs)
 song_freqs = []
 song_amplitudes = []
 
-
 #creating list of frequency and amplitudes at each x-coordinate
 for pos in range(width):
 
@@ -145,7 +145,6 @@ for pos in range(width):
 
 #img_array = []
 
-
 #create video
 out_video = cv2.VideoWriter('video.avi',cv2.VideoWriter_fourcc(*'DIVX'), 4, size)
 
@@ -156,11 +155,37 @@ for i in range(width):
   if i in source_freqs.keys():
     tbl_copy = tbl.loc[tbl[1]==i]
     print(tbl_copy)
+
     for y in tbl_copy[2]:
       img[y, i] = (255,255,255)
+
+      for tri in range(0,4):
+        print(tri)
+        x_tri = []
+        y_tri = []
+        if tri == 0:
+          x_tri, y_tri = utils.insidetriangle(i, i, i+3, y, y+3, y)
+        if tri == 1:
+          x_tri, y_tri = utils.insidetriangle(i, i, i+3, y, y-3, y)
+        if tri == 2:
+          x_tri, y_tri = utils.insidetriangle(i, i, i-3, y, y-3, y)
+        if tri == 3:
+          x_tri, y_tri = utils.insidetriangle(i, i, i-3, y, y+3, y)
+
+        print(x_tri, "\n", y_tri)
+
+        for j in range(len(x_tri)):
+          if(y_tri[j] >= height):
+            y_pix = height - 1
+          else:
+            y_pix = int(y_tri[j])
+          if(x_tri[j] >= width):
+            x_pix = width - 1
+          else:
+            x_pix = int(x_tri[j])
+          img[y_pix, x_pix] = (255,255,255)
   
   out_video.write(img)
 
 out_video.release()
 clip = VideoFileClip("video.avi")
- 
