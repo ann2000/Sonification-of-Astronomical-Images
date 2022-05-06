@@ -16,7 +16,7 @@ sustain_level = 0.1
 right_hand = utils.get_song_data(sonification1.song_freqs, note_duration, factor, sonification1.song_amplitudes)
 # bar value needed for pedal
 data = right_hand
-print(data)
+#print(data)
 #data = data * (4096/np.max(data))
 
 wavfile.write('data/sonified_audio.wav', 44100, data.astype(np.int16))

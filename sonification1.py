@@ -79,20 +79,20 @@ npixels = 5
 segm = detect_sources(data, threshold, npixels=npixels, kernel=kernel)
 segm_deblend = deblend_sources(data, segm, npixels=npixels,kernel=kernel, nlevels=32,contrast=0.001)
 
-#norm = ImageNormalize(stretch=SqrtStretch())
-#fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 12.5))
-#ax1.imshow(data, origin='lower', cmap='Greys_r', norm=norm)
-#ax1.set_title('Data')
-#cmap = segm.make_cmap(seed=123)
-##ax2.imshow(segm, origin='lower', cmap=cmap, interpolation='nearest')
-#ax2.set_title('Segmentation Image')
-#
-#fig, ax = plt.subplots(1, 1, figsize=(10, 6.5))
-#cmap = segm_deblend.make_cmap(seed=123)
-##ax.imshow(segm_deblend, origin='lower', cmap=cmap, interpolation='nearest')
-#ax.set_title('Deblended Segmentation Image')
-#plt.tight_layout()
-#plt.show()
+norm = ImageNormalize(stretch=SqrtStretch())
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 12.5))
+ax1.imshow(data, origin='lower', cmap='Greys_r', norm=norm)
+ax1.set_title('Data')
+cmap = segm.make_cmap(seed=123)
+ax2.imshow(segm, origin='lower', cmap=cmap, interpolation='nearest')
+ax2.set_title('Segmentation Image')
+
+fig, ax = plt.subplots(1, 1, figsize=(10, 6.5))
+cmap = segm_deblend.make_cmap(seed=123)
+ax.imshow(segm_deblend, origin='lower', cmap=cmap, interpolation='nearest')
+ax.set_title('Deblended Segmentation Image')
+plt.tight_layout()
+plt.show()
 
 cat = SourceCatalog(data, segm_deblend)
 tbl = cat.to_table()
@@ -154,13 +154,12 @@ for i in range(width):
 
   if i in source_freqs.keys():
     tbl_copy = tbl.loc[tbl[1]==i]
-    print(tbl_copy)
+    # print(tbl_copy)
 
     for y in tbl_copy[2]:
       img[y, i] = (255,255,255)
 
       for tri in range(0,4):
-        print(tri)
         x_tri = []
         y_tri = []
         if tri == 0:
@@ -171,8 +170,6 @@ for i in range(width):
           x_tri, y_tri = utils.insidetriangle(i, i, i-3, y, y-3, y)
         if tri == 3:
           x_tri, y_tri = utils.insidetriangle(i, i, i-3, y, y+3, y)
-
-        print(x_tri, "\n", y_tri)
 
         for j in range(len(x_tri)):
           if(y_tri[j] >= height):
