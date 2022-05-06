@@ -17,6 +17,7 @@ from PIL import Image
 import operator
 
 import pandas as pd
+from moviepy.editor import *
 
 def freq_mapping(N):
 
@@ -139,7 +140,10 @@ def get_freqandamp(file_path):
   return song_freqs, song_amplitudes
 
 #img_array = []
-out_video = cv2.VideoWriter('video.avi',cv2.VideoWriter_fourcc(*'DIVX'), 15, size)
+
+
+#create video
+out_video = cv2.VideoWriter('video.avi',cv2.VideoWriter_fourcc(*'DIVX'), 4, size)
 
 for i in range(width):
 
@@ -154,3 +158,5 @@ for i in range(width):
   out_video.write(img)
 
 out_video.release()
+clip = VideoFileClip("video.avi")
+ 
