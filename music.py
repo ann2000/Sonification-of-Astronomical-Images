@@ -25,8 +25,13 @@ for path in file_path:
 
     right_hand = utils.get_song_data(song_freqs, note_duration, factor, song_amplitudes)
 # bar value needed for pedal
+<<<<<<< HEAD
     data = right_hand
 print(data)
+=======
+data = right_hand
+#print(data)
+>>>>>>> 22942dd718ae9f7f7c3d12d5e49eabf2d54b834a
 #data = data * (4096/np.max(data))
 
 #sonification1.out_video.release()
@@ -36,10 +41,10 @@ sound, fs = sf.read('data/sonified_audio.wav', dtype='float32')
 #sd.play(sound, fs)
 status = sd.wait()
 clip = sonification1.clip
-  
+
 # loading audio file
 audioclip = AudioFileClip("data/sonified_audio.wav")
   
 # adding audio to the video clip
 videoclip = clip.set_audio(audioclip)
-videoclip.write_videofile("video.avi",codec="libx264")
+videoclip.write_videofile("video2.avi", codec="libx264")

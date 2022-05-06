@@ -39,3 +39,35 @@ def get_song_data(freqs, note_values, factor, amplitudes, sample_rate=44100):
 #        song = song*(amplitudes[i]/np.max(song))
 
     return song
+
+
+def insidetriangle(x1,x2,x3,y1,y2,y3):
+
+    xs=np.array((x1,x2,x3),dtype=float)
+    ys=np.array((y1,y2,y3),dtype=float)
+
+    # The possible range of coordinates that can be returned
+    x_range=np.arange(np.min(xs),np.max(xs)+1)
+    y_range=np.arange(np.min(ys),np.max(ys)+1)
+
+    # Set the grid of coordinates on which the triangle lies. The centre of the
+    # triangle serves as a criterion for what is inside or outside the triangle.
+    X,Y=np.meshgrid( x_range,y_range )
+    xc=np.mean(xs)
+    yc=np.mean(ys)
+
+    # From the array 'triangle', points that lie outside the triangle will be
+    # set to 'False'.
+    triangle = np.ones(X.shape,dtype=bool)
+    for i in range(3):
+        ii=(i+1)%3
+        if xs[i]==xs[ii]:
+            include = X *(xc-xs[i])/abs(xc-xs[i]) > xs[i] *(xc-xs[i])/abs(xc-xs[i])
+        else:
+            poly=np.poly1d([(ys[ii]-ys[i])/(xs[ii]-xs[i]),ys[i]-xs[i]*(ys[ii]-ys[i])/(xs[ii]-xs[i])])
+            include = Y *(yc-poly(xc))/abs(yc-poly(xc)) > poly(X) *(yc-poly(xc))/abs(yc-poly(xc))
+        triangle*=include
+
+    # Output: 2 arrays with the x- and y- coordinates of the points inside the
+    # triangle.
+    return X[triangle],Y[triangle]
