@@ -19,14 +19,6 @@ import operator
 import pandas as pd
 from moviepy.editor import *
 
-<<<<<<< HEAD
-=======
-import utils
-
-freq = []
-amplitudes = []
-
->>>>>>> 22942dd718ae9f7f7c3d12d5e49eabf2d54b834a
 def freq_mapping(N):
 
 #  fl = 2**((0+1-49)/12)*440
@@ -74,8 +66,6 @@ def get_freqandamp(file_path):
   data = data - bkg.background  # subtract the background
   threshold = 2. * bkg.background_rms  # above the background
 
-<<<<<<< HEAD
-
   sigma = 3.0 * gaussian_fwhm_to_sigma  # FWHM = 3.
   kernel = Gaussian2DKernel(sigma, x_size=3, y_size=3)
   kernel.normalize()
@@ -97,29 +87,6 @@ def get_freqandamp(file_path):
   #ax.set_title('Deblended Segmentation Image')
   #plt.tight_layout()
   #plt.show()
-=======
-sigma = 3.0 * gaussian_fwhm_to_sigma  # FWHM = 3.
-kernel = Gaussian2DKernel(sigma, x_size=3, y_size=3)
-kernel.normalize()
-npixels = 5
-segm = detect_sources(data, threshold, npixels=npixels, kernel=kernel)
-segm_deblend = deblend_sources(data, segm, npixels=npixels,kernel=kernel, nlevels=32,contrast=0.001)
-
-norm = ImageNormalize(stretch=SqrtStretch())
-fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 12.5))
-ax1.imshow(data, origin='lower', cmap='Greys_r', norm=norm)
-ax1.set_title('Data')
-cmap = segm.make_cmap(seed=123)
-ax2.imshow(segm, origin='lower', cmap=cmap, interpolation='nearest')
-ax2.set_title('Segmentation Image')
-
-fig, ax = plt.subplots(1, 1, figsize=(10, 6.5))
-cmap = segm_deblend.make_cmap(seed=123)
-ax.imshow(segm_deblend, origin='lower', cmap=cmap, interpolation='nearest')
-ax.set_title('Deblended Segmentation Image')
-plt.tight_layout()
-plt.show()
->>>>>>> 22942dd718ae9f7f7c3d12d5e49eabf2d54b834a
 
   cat = SourceCatalog(data, segm_deblend)
   tbl = cat.to_table()
@@ -160,7 +127,6 @@ plt.show()
   song_freqs = []
   song_amplitudes = []
 
-<<<<<<< HEAD
   for pos in range(width):
 
     if pos in source_freqs.keys():
@@ -169,15 +135,11 @@ plt.show()
     else:
         song_freqs.append([0])
         song_amplitudes.append([0])
-=======
-#creating list of frequency and amplitudes at each x-coordinate
-for pos in range(width):
->>>>>>> 22942dd718ae9f7f7c3d12d5e49eabf2d54b834a
 
   return song_freqs, song_amplitudes
 
 #img_array = []
-
+'''
 #create video
 out_video = cv2.VideoWriter('video.avi',cv2.VideoWriter_fourcc(*'DIVX'), 4, size)
 
@@ -219,3 +181,4 @@ for i in range(width):
 
 out_video.release()
 clip = VideoFileClip("video.avi")
+'''
