@@ -18,15 +18,22 @@ file_path = filedialog.askopenfilenames()
 for i in range (len(file_path)):
 
     file_name = os.path.basename(file_path[i])
-    print(file_name)
     song_freqs, song_amplitudes = sonification1.get_freqandamp(file_path[i])
     note_duration = [0.25]*len(song_freqs)
 
-#factor = [0.59, 0.10, 0.13, 0.        , 0.00, 0.02, 0.13] #violin
-#factor = [0.89640525, 0.08522547, 0.        , 0.        , 0.01836929] #bass
-    factor = [0.73, 0.16, 0.06, 0.0, 0.01 , 0.0, 0.01] #piano
+    if (file_name.startswith('ir')):
+        print(file_name)
+        factor = [0.89640525, 0.08522547, 0.        , 0.        , 0.01836929] #bass
+    elif (file_name.startswith('optical')):
+        print(file_name)
+        factor = [0.59, 0.10, 0.13, 0.        , 0.00, 0.02, 0.13] #violin
+    elif (file_name.startswith('xray')):
+        print(file_name)
+        factor = [0.73, 0.16, 0.06, 0.0, 0.01 , 0.0, 0.01] #piano
+
 #length = [0.01, 0.6, 0.29, 0.1]
 #decay = [0.05,0.02,0.005,0.1]
+
     sustain_level = 0.1
 
     if i==0:

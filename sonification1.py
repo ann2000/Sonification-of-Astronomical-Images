@@ -138,7 +138,7 @@ def get_freqandamp(file_path):
 
   return song_freqs, song_amplitudes
 
-#img_array = []
+source_coordinates = dict()
 '''
 #create video
 out_video = cv2.VideoWriter('video.avi',cv2.VideoWriter_fourcc(*'DIVX'), 4, size)
