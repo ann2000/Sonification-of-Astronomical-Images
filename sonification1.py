@@ -108,6 +108,7 @@ def get_freqandamp(file_path):
   sources_count = len(tbl)
   source_freqs = dict()
   source_amplitudes = dict()
+  source_positions = dict()
 
   freq_mapping(height)
   amp_mapping()
@@ -122,6 +123,7 @@ def get_freqandamp(file_path):
       print(tbl[0][source], "\t\t", x, "\t\t", y, "\t\t", image[y,x], px_intensity, "\t\t", freq[y], "\t\t", amplitudes[px_intensity])
       source_freqs.setdefault(x,[]).append(freq[y])
       source_amplitudes.setdefault(x,[]).append(amplitudes[px_intensity])
+      source_positions.setdefault(x,[]).append(y)
 
   print(source_freqs)
   song_freqs = []
@@ -136,49 +138,4 @@ def get_freqandamp(file_path):
         song_freqs.append([0])
         song_amplitudes.append([0])
 
-  return song_freqs, song_amplitudes
-
-source_coordinates = dict()
-'''
-#create video
-out_video = cv2.VideoWriter('video.avi',cv2.VideoWriter_fourcc(*'DIVX'), 4, size)
-
-for i in range(width):
-
-  img = image
-
-  if i in source_freqs.keys():
-    tbl_copy = tbl.loc[tbl[1]==i]
-    # print(tbl_copy)
-
-    for y in tbl_copy[2]:
-      img[y, i] = (255,255,255)
-
-      for tri in range(0,4):
-        x_tri = []
-        y_tri = []
-        if tri == 0:
-          x_tri, y_tri = utils.insidetriangle(i, i, i+3, y, y+3, y)
-        if tri == 1:
-          x_tri, y_tri = utils.insidetriangle(i, i, i+3, y, y-3, y)
-        if tri == 2:
-          x_tri, y_tri = utils.insidetriangle(i, i, i-3, y, y-3, y)
-        if tri == 3:
-          x_tri, y_tri = utils.insidetriangle(i, i, i-3, y, y+3, y)
-
-        for j in range(len(x_tri)):
-          if(y_tri[j] >= height):
-            y_pix = height - 1
-          else:
-            y_pix = int(y_tri[j])
-          if(x_tri[j] >= width):
-            x_pix = width - 1
-          else:
-            x_pix = int(x_tri[j])
-          img[y_pix, x_pix] = (255,255,255)
-  
-  out_video.write(img)
-
-out_video.release()
-clip = VideoFileClip("video.avi")
-'''
+  return song_freqs, song_amplitudes, source_positions

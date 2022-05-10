@@ -1,6 +1,7 @@
+import cv2
 import numpy as np
 from scipy.io import wavfile
-import utils, sonification1
+import utils, sonification1, merge
 import sounddevice as sd
 import soundfile as sf
 from moviepy.editor import *
@@ -14,11 +15,15 @@ root = tk.Tk()
 root.withdraw()
 
 file_path = filedialog.askopenfilenames()
+source_coordinate_list = []
 
 for i in range (len(file_path)):
 
     file_name = os.path.basename(file_path[i])
-    song_freqs, song_amplitudes = sonification1.get_freqandamp(file_path[i])
+    source_positions = dict()
+    song_freqs, song_amplitudes, source_positions = sonification1.get_freqandamp(file_path[i])
+    source_coordinate_list.append(source_positions)
+
     note_duration = [0.25]*len(song_freqs)
 
     if (file_name.startswith('ir')):
@@ -41,6 +46,18 @@ for i in range (len(file_path)):
     else:
         data += utils.get_song_data(song_freqs, note_duration, factor, song_amplitudes)
 # bar value needed for pedal
+source_coordinates = dict()
+
+for dict in source_coordinate_list:
+    for list in dict:
+        if list in source_coordinates:
+            source_coordinates[list] += (dict[list])
+        else:
+            source_coordinates[list] = dict[list]
+
+merge.merge_images(file_path)
+image = cv2.imread('numpy_image_alpha_blend.jpg')
+clip = utils.get_video(image, source_coordinates)
 
 print(data)
 #data = data * (4096/np.max(data))

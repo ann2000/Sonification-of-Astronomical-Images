@@ -1,3 +1,4 @@
+import cv2
 import numpy as np
 
 def get_sine_wave(frequency, duration, amplitude, sample_rate=44100):
@@ -6,9 +7,9 @@ def get_sine_wave(frequency, duration, amplitude, sample_rate=44100):
     wave = amplitude*np.sin(2*np.pi*frequency*t)
     return wave
 
+
 def apply_overtones(frequency, duration, factor, amplitude, sample_rate=44100):
 
-    
     frequencies = np.minimum(np.array([frequency*(x+1) for x in range(len(factor))]), sample_rate//2)
     amplitudes = np.array([amplitude*x for x in factor])
     
@@ -70,4 +71,49 @@ def insidetriangle(x1,x2,x3,y1,y2,y3):
 
     # Output: 2 arrays with the x- and y- coordinates of the points inside the
     # triangle.
-    return X[triangle],Y[triangle]
+    return X[triangle], Y[triangle]
+
+
+def get_video(image, coordinates):
+
+    height, width, channel
+    out_video = cv2.VideoWriter('video.avi',cv2.VideoWriter_fourcc(*'DIVX'), 4, size)
+
+    for i in range(width):
+
+      img = image
+
+      if i in source_freqs.keys():
+        tbl_copy = tbl.loc[tbl[1]==i]
+        # print(tbl_copy)
+
+        for y in tbl_copy[2]:
+          img[y, i] = (255,255,255)
+
+          for tri in range(0,4):
+            x_tri = []
+            y_tri = []
+            if tri == 0:
+              x_tri, y_tri = utils.insidetriangle(i, i, i+3, y, y+3, y)
+            if tri == 1:
+              x_tri, y_tri = utils.insidetriangle(i, i, i+3, y, y-3, y)
+            if tri == 2:
+              x_tri, y_tri = utils.insidetriangle(i, i, i-3, y, y-3, y)
+            if tri == 3:
+              x_tri, y_tri = utils.insidetriangle(i, i, i-3, y, y+3, y)
+
+            for j in range(len(x_tri)):
+              if(y_tri[j] >= height):
+                y_pix = height - 1
+              else:
+                y_pix = int(y_tri[j])
+              if(x_tri[j] >= width):
+                x_pix = width - 1
+              else:
+                x_pix = int(x_tri[j])
+              img[y_pix, x_pix] = (255,255,255)
+    
+      out_video.write(img)
+
+    out_video.release()
+    clip = VideoFileClip("video.avi")
