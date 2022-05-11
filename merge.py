@@ -10,10 +10,10 @@ def merge_images(file_path):
     for i in range (len(file_path)):
 
         if i == 0:
-            src1 = np.array(Image.open(file_path[i]))
+            src = np.array(Image.open(file_path[i]))
         else:          
-            src = np.array(Image.open(file_path[i]).resize(src1.shape[1::-1], Image.BILINEAR))
+            src = np.array(Image.open(file_path[i]).resize(src.shape[1::-1], Image.BILINEAR))
 
-    dst += src * 0.5
+        dst += src * (1/len(file_path))
     
-    Image.fromarray(dst.astype(np.uint8)).save('numpy_image_alpha_blend.jpg')
+    Image.fromarray(dst.astype(np.uint8)).save('blended_image.jpg')

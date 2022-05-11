@@ -17,7 +17,6 @@ from PIL import Image
 import operator
 
 import pandas as pd
-from moviepy.editor import *
 
 def freq_mapping(N):
 
@@ -101,7 +100,7 @@ def get_freqandamp(file_path):
 
   px = im.load()
   width, height = im.size
-  size = (width, height)
+  #size = (width, height)
   # coordinate = x, y = 401, 0
   # print(im.getpixel(401, 0))
 

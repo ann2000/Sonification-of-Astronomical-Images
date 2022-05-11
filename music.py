@@ -56,7 +56,7 @@ for dict in source_coordinate_list:
             source_coordinates[list] = dict[list]
 
 merge.merge_images(file_path)
-image = cv2.imread('numpy_image_alpha_blend.jpg')
+image = cv2.imread('blended_image.jpg')
 clip = utils.get_video(image, source_coordinates)
 
 print(data)
@@ -66,11 +66,9 @@ print(data)
 
 wavfile.write('data/sonified_audio.wav', 44100, data.astype(np.int16))
 
-'''
 sound, fs = sf.read('data/sonified_audio.wav', dtype='float32')  
 #sd.play(sound, fs)
 status = sd.wait()
-clip = sonification1.clip
 
 # loading audio file
 audioclip = AudioFileClip("data/sonified_audio.wav")
@@ -78,4 +76,3 @@ audioclip = AudioFileClip("data/sonified_audio.wav")
 # adding audio to the video clip
 videoclip = clip.set_audio(audioclip)
 videoclip.write_videofile("video2.avi", codec="libx264")
-'''

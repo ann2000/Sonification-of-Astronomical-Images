@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 
+from moviepy.editor import *
+
 def get_sine_wave(frequency, duration, amplitude, sample_rate=44100):
   
     t = np.linspace(0, duration, int(sample_rate*duration))
@@ -74,33 +76,31 @@ def insidetriangle(x1,x2,x3,y1,y2,y3):
     return X[triangle], Y[triangle]
 
 
-def get_video(image, coordinates):
+def get_video(image, source_coordinates):
 
-    height, width, channel
-    out_video = cv2.VideoWriter('video.avi',cv2.VideoWriter_fourcc(*'DIVX'), 4, size)
+    height, width, _ = image.shape
+    out_video = cv2.VideoWriter('video.avi',cv2.VideoWriter_fourcc(*'DIVX'), 4, (width, height))
 
     for i in range(width):
 
       img = image
 
-      if i in source_freqs.keys():
-        tbl_copy = tbl.loc[tbl[1]==i]
-        # print(tbl_copy)
+      if i in source_coordinates.keys():
 
-        for y in tbl_copy[2]:
+        for y in source_coordinates[i]:
           img[y, i] = (255,255,255)
 
           for tri in range(0,4):
             x_tri = []
             y_tri = []
             if tri == 0:
-              x_tri, y_tri = utils.insidetriangle(i, i, i+3, y, y+3, y)
+              x_tri, y_tri = insidetriangle(i, i, i+3, y, y+3, y)
             if tri == 1:
-              x_tri, y_tri = utils.insidetriangle(i, i, i+3, y, y-3, y)
+              x_tri, y_tri = insidetriangle(i, i, i+3, y, y-3, y)
             if tri == 2:
-              x_tri, y_tri = utils.insidetriangle(i, i, i-3, y, y-3, y)
+              x_tri, y_tri = insidetriangle(i, i, i-3, y, y-3, y)
             if tri == 3:
-              x_tri, y_tri = utils.insidetriangle(i, i, i-3, y, y+3, y)
+              x_tri, y_tri = insidetriangle(i, i, i-3, y, y+3, y)
 
             for j in range(len(x_tri)):
               if(y_tri[j] >= height):
@@ -117,3 +117,4 @@ def get_video(image, coordinates):
 
     out_video.release()
     clip = VideoFileClip("video.avi")
+    return clip
