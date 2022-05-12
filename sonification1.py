@@ -18,18 +18,10 @@ import operator
 
 import pandas as pd
 
-def freq_mapping(N):
+def freq_mapping(N, fl, fh):
 
-#  fl = 2**((0+1-49)/12)*440
-#  fh = 2**((N+1-49)/12)*440
-#  
-#  for i in range(0,N):
-#    a = 2**((i+1-49)/12)*440
-#    freq.append(a)
   global freq
   freq = []
-  fl = 20
-  fh = 20000
 
   for i in range(1, N+1):
     a = fl+(fh-fl)*(i-1)/(N-1)
@@ -47,7 +39,7 @@ def amp_mapping():
     b = al+(ah-al)*(i-1)/(N-1)
     amplitudes.append(b)
 
-def get_freqandamp(file_path):
+def get_freqandamp(file_path, fl, fh):
 
   image=cv2.imread(file_path)
   im = Image.open(file_path)
@@ -104,12 +96,12 @@ def get_freqandamp(file_path):
   # coordinate = x, y = 401, 0
   # print(im.getpixel(401, 0))
 
-  sources_count = len(tbl)
+  #sources_count = len(tbl)
   source_freqs = dict()
   source_amplitudes = dict()
   source_positions = dict()
 
-  freq_mapping(height)
+  freq_mapping(height, fl, fh)
   amp_mapping()
 
   print("Sources     x-coordinate     y-coordinate      intensity                     frequency         amplitude\n")
