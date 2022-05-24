@@ -83,8 +83,9 @@ def get_video(image, source_coordinates):
 
     for i in range(width):
 
-      img = image
-
+      img = image.copy()
+      #cv2.imshow("Img",image)
+      cv2.waitKey(0)
       if i in source_coordinates.keys():
 
         for y in source_coordinates[i]:
@@ -112,7 +113,7 @@ def get_video(image, source_coordinates):
               else:
                 x_pix = int(x_tri[j])
               img[y_pix, x_pix] = (255,255,255)
-    
+
       out_video.write(img)
 
     out_video.release()
