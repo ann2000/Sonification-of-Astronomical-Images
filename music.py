@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 from scipy.io import wavfile
-import utils, sonification1, merge
+import utils, sonification, merge
 import sounddevice as sd
 import soundfile as sf
 from moviepy.editor import *
@@ -38,7 +38,7 @@ def get_music():
             fl, fh = 28, 4186 
 
         source_positions = {}
-        song_freqs, song_amplitudes, source_positions = sonification1.get_freqandamp(file_path[i], fl, fh)
+        song_freqs, song_amplitudes, source_positions = sonification.get_freqandamp(file_path[i], fl, fh)
         source_coordinate_list.append(source_positions)
 
         note_duration = [0.25]*len(song_freqs)
@@ -83,4 +83,3 @@ def get_music():
     # adding audio to the video clip
     videoclip = clip.set_audio(audioclip)
     videoclip.write_videofile("video2.avi", codec="libx264")
-
